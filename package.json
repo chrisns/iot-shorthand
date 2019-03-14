@@ -9,6 +9,8 @@
   "files": [
     "index.js"
   ],
+  "repository": "github:chrisns/iot-shorthand",
+  "homepage": "https://github.com/chrisns/iot-shorthand#readme",
   "author": "Chris Nesbitt-Smith",
   "license": "MIT",
   "devDependencies": {
