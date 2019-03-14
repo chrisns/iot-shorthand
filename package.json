@@ -1,0 +1,23 @@
+{
+  "name": "@chrisns/iot-shorthand",
+  "version": "1.0.2-0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "files": [
+    "index.js"
+  ],
+  "author": "Chris Nesbitt-Smith",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^11.11.3",
+    "typescript": "^3.3.3333"
+  },
+  "dependencies": {
+    "aws-iot-device-sdk": "^2.2.1",
+    "aws-sdk": "^2.421.0",
+    "lodash": "^4.17.11"
+  },
+  "description": ""
+}
