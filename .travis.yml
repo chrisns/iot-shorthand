@@ -1,15 +1,27 @@
 language: node_js
-node_js: 
-  - stable
-  - 6
-  - 7
-  - 8
-  - 9
-  - 10
-  - 11
+
+matrix:
+  fast_finish: true
+  include:
+  - node_js: stable
+  - node_js: 6
+  - node_js: 7
+  - node_js: 8
+  - node_js: 9
+  - node_js: 10
+  - node_js: 11
+  allow_failures:
+  - node_js: 6
+  - node_js: 7
+  - node_js: 8
+  - node_js: 9
+  - node_js: 10
+  - node_js: 11
+
 before_deploy:
 - npm --no-git-tag-version version 1.0.$TRAVIS_BUILD_NUMBER
 - npm run build
+
 deploy:
   provider: npm
   email: chris@cns.me.uk
