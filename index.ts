@@ -5,11 +5,6 @@ const AWSiot = new AWS.Iot()
 const awsIot = require('aws-iot-device-sdk')
 const _ = require("lodash")
 
-const thingShadows = awsIot.thingShadow({
-  host: AWS_IOT_ENDPOINT_HOST,
-  protocol: 'wss'
-})
-
 interface Thing {
   name: string
   type: string
@@ -28,7 +23,12 @@ interface StateObject {
 
 class iot {
   subscriptions: Array<Subscription>
+  thingShadows: any
   constructor() {
+    this.thingShadows = awsIot.thingShadow({
+      host: AWS_IOT_ENDPOINT_HOST,
+      protocol: 'wss'
+    })
     // thingShadows.on('delta', this.event_handler)
   }
 
@@ -58,7 +58,7 @@ class iot {
   }
 
   subscribe_to_thing(thing_name: string, event_handler?: Function) {
-    thingShadows.register(thing_name)
+    this.thingShadows.register(thing_name)
     if (event_handler) {
       this.subscriptions.push({ thing_name: thing_name, event_handler: event_handler })
     }
@@ -67,12 +67,13 @@ class iot {
 
   report(thing_name: string, payload: Object) {
     console.log(`updating ${thing_name}, payload: ${JSON.stringify(payload)}`)
-    return thingShadows.update(thing_name, { state: { reported: payload } })
+    return this.thingShadows.update(thing_name, { state: { reported: payload } })
   }
 
   async destroy_thing(thing_name: String) {
-    await awsIot.thingShadow.unregister(thing_name)
+    await this.thingShadows.unregister(thing_name)
     await AWSiot.deleteThing({ thingName: thing_name }).promise()
+    // @TODO remove from this.subscriptions
   }
 
 }
