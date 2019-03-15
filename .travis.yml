@@ -18,6 +18,8 @@ matrix:
   - node_js: 10
   - node_js: 11
 
+after_success: npm run coverage
+
 before_deploy:
 - npm --no-git-tag-version version 1.0.$TRAVIS_BUILD_NUMBER
 - npm run build
