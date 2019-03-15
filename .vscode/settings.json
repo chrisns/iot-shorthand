@@ -1,0 +1,5 @@
+{
+  "coverage-gutters.highlightdark": "rgba(45, 0, 10, 0)",
+  "coverage-gutters.highlightlight": "rgba(166, 0, 142, 0)",
+  "coverage-gutters.showLineCoverage": true
+}
