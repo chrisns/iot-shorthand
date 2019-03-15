@@ -22,7 +22,7 @@ interface StateObject {
 }
 
 class iot {
-  subscriptions: Array<Subscription>
+  subscriptions: Array<Subscription> = []
   thingShadows: any
   constructor() {
     this.thingShadows = awsIot.thingShadow({

@@ -17,6 +17,8 @@ describe("app", () => {
       update: sinon.stub()
     }
     awsIot = {
+      updateThing: sinon.stub().returns({ promise: sinon.stub() }),
+      createThing: sinon.stub().returns({ promise: sinon.stub() }),
       deleteThing: sinon.stub().returns({ promise: sinon.stub() })
     }
     stubs = {
@@ -51,12 +53,41 @@ describe("app", () => {
   })
 
   describe("event_handler", () => {
-
+    beforeEach(() => {
+      app.subscriptions = [{ thing_name: "foo", event_handler: sinon.stub() }, { thing_name: "foo", event_handler: sinon.stub() }, { thing_name: "bar", event_handler: sinon.stub() }]
+      app.event_handler("foo", { state: "some state here" })
+    })
+    it("should dispatch the event to the handlers", () =>
+      expect(app.subscriptions[0].event_handler).to.have.been.calledOnceWith("some state here")
+    )
+    it("should dispatch the event to multiple handlers", () =>
+      expect(app.subscriptions[1].event_handler).to.have.been.calledOnceWith("some state here")
+    )
+    it("should not dispatch the event to handlers that aren't subscribing", () =>
+      expect(app.subscriptions[2].event_handler).to.not.have.been.called
+    )
   })
 
   describe("upsert_thing", () => {
-    it("should update the thing")
-    it("should create the thing if the update fails")
+    let thing = { name: "foo", type: "bar", attributes: { joe: "smith", john: "james" } }
+    let awsThing = {
+      thingName: "foo",
+      thingTypeName: "bar",
+      attributePayload: {
+        attributes: { joe: "smith", john: "james" }
+      }
+    }
+    it("should update the thing", () => {
+      app.upsert_thing(thing)
+      expect(awsIot.updateThing).to.have.been.calledWith(awsThing)
+      expect(awsIot.createThing).to.not.have.been.called
+    })
+    it("should create the thing if the update fails", () => {
+      awsIot.updateThing.throws("exception")
+      app.upsert_thing(thing)
+      expect(awsIot.createThing).to.have.been.calledWith(awsThing)
+
+    })
   })
 
   describe("subscribe_to_thing", () => {
@@ -67,8 +98,13 @@ describe("app", () => {
     it("should register an interest in the thing", () =>
       expect(thingShadow.register).to.be.have.been.calledOnceWith("foo")
     )
-    it("should add the thing to the subscriptions if an event handler is provided")
-    it("should not add to the subscriptions if an event handler is not provided")
+    it("should add the thing to the subscriptions if an event handler is provided", () =>
+      expect(app.subscriptions).to.be.empty
+    )
+    it("should not add to the subscriptions if an event handler is not provided", () => {
+      app.subscribe_to_thing("foo", "bar")
+      return expect(app.subscriptions[0]).to.eql({ thing_name: "foo", event_handler: "bar" })
+    })
   })
 
   describe("report", () => {
