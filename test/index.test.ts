@@ -13,7 +13,8 @@ describe("app", () => {
   beforeEach(() => {
     thingShadow = {
       register: sinon.stub(),
-      unregister: sinon.stub()
+      unregister: sinon.stub(),
+      update: sinon.stub()
     }
     awsIot = {
       deleteThing: sinon.stub().returns({ promise: sinon.stub() })
@@ -59,7 +60,13 @@ describe("app", () => {
   })
 
   describe("subscribe_to_thing", () => {
-    it("should register an interest in the thing")
+    beforeEach(() => {
+      app.subscribe_to_thing("foo")
+      // app.thingShadows.register = sinon.stub()
+    })
+    it("should register an interest in the thing", () =>
+      expect(thingShadow.register).to.be.have.been.calledOnceWith("foo")
+    )
     it("should add the thing to the subscriptions if an event handler is provided")
     it("should not add to the subscriptions if an event handler is not provided")
   })
@@ -67,11 +74,10 @@ describe("app", () => {
   describe("report", () => {
     var payload = { foo: "bar" }
     beforeEach(() => {
-      app.thingShadows.update = sinon.stub()
       app.report("foo", payload)
     })
     it("should update the thing shadow", () =>
-      expect(app.thingShadows.update).to.have.been.calledOnceWith("foo", { state: { reported: payload } })
+      expect(thingShadow.update).to.have.been.calledOnceWith("foo", { state: { reported: payload } })
     )
   })
 
