@@ -73,7 +73,7 @@ class iot {
   async destroy_thing(thing_name: String) {
     await this.thingShadows.unregister(thing_name)
     await AWSiot.deleteThing({ thingName: thing_name }).promise()
-    // @TODO remove from this.subscriptions
+    // FIXME: remove from this.subscriptions
   }
 
 }
