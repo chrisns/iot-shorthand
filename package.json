@@ -3,7 +3,7 @@
   "version": "1.0.2-0",
   "main": "index.js",
   "scripts": {
-    "test": "nyc mocha -r ts-node/register test/*.ts",
+    "test": "nyc mocha",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "build": "tsc index.ts"
   },
@@ -11,6 +11,11 @@
     "index.js"
   ],
   "nyc": {
+    "reporter": [
+      "lcovonly",
+      "text-summary"
+    ],
+    "sourceMap": true,
     "include": [
       "index.ts"
     ],
