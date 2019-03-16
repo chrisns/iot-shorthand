@@ -18,6 +18,8 @@ matrix:
   - node_js: 10
   - node_js: 11
 
+before_script: npm audit fix
+
 after_success: npm run coverage
 
 before_deploy:
