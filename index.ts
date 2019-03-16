@@ -32,12 +32,13 @@ class iot {
     // thingShadows.on('delta', this.event_handler)
   }
 
-  async discovered(thing: Thing, event_handler?: Function) {
+  public async discovered(thing: Thing, event_handler?: Function) {
     await this.upsert_thing(thing)
     await this.subscribe_to_thing(thing.name, event_handler)
   }
 
   private event_handler(thing_name: String, state_object: StateObject) {
+    console.log(`RECEIVED ${thing_name}, PAYLOAD: ${JSON.stringify(payload)}`)
     _.filter(this.subscriptions, { thing_name: thing_name })
       .forEach(subscriber => subscriber.event_handler(state_object.state))
   }
@@ -57,7 +58,7 @@ class iot {
     }
   }
 
-  subscribe_to_thing(thing_name: string, event_handler?: Function) {
+  private subscribe_to_thing(thing_name: string, event_handler?: Function) {
     this.thingShadows.register(thing_name)
     if (event_handler) {
       this.subscriptions.push({ thing_name: thing_name, event_handler: event_handler })
@@ -65,15 +66,15 @@ class iot {
 
   }
 
-  report(thing_name: string, payload: Object) {
-    console.log(`updating ${thing_name}, payload: ${JSON.stringify(payload)}`)
+  public report(thing_name: string, payload: Object) {
+    console.log(`UPDATE ${thing_name}, PAYLOAD: ${JSON.stringify(payload)}`)
     return this.thingShadows.update(thing_name, { state: { reported: payload } })
   }
 
   async destroy_thing(thing_name: String) {
     await this.thingShadows.unregister(thing_name)
     await AWSiot.deleteThing({ thingName: thing_name }).promise()
-    // FIXME: remove from this.subscriptions
+    _.remove(this.subscriptions, { thing_name: thing_name })
   }
 
 }

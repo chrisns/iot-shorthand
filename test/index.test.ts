@@ -40,14 +40,14 @@ describe("app", () => {
     var thing = { name: "foo", type: "bar", attributes: { foo: "bar" } }
     var event_handler = sinon.stub()
     beforeEach(() => {
-      app.upsert_thing = sinon.stub()
-      app.subscribe_to_thing = sinon.stub()
-      app.discovered(thing, event_handler)
+      app.upsert_thing = sinon.stub().resolves()
+      app.subscribe_to_thing = sinon.stub().resolves()
+      return app.discovered(thing, event_handler)
     })
     it("should upsert the thing", () =>
       expect(app.upsert_thing).to.have.been.calledOnceWith(thing)
     )
-    xit("should subscribe to the thing", () =>
+    it("should subscribe to the thing", () =>
       expect(app.subscribe_to_thing).to.have.been.calledOnceWith(thing.name, event_handler)
     )
   })
@@ -93,7 +93,6 @@ describe("app", () => {
   describe("subscribe_to_thing", () => {
     beforeEach(() => {
       app.subscribe_to_thing("foo")
-      // app.thingShadows.register = sinon.stub()
     })
     it("should register an interest in the thing", () =>
       expect(thingShadow.register).to.be.have.been.calledOnceWith("foo")
@@ -118,7 +117,10 @@ describe("app", () => {
   })
 
   describe("destroy_thing", () => {
-    beforeEach(async () => app.destroy_thing("foo"))
+    beforeEach(async () => {
+      app.subscriptions = [{ thing_name: "foo", event_handler: sinon.stub() }, { thing_name: "foo", event_handler: sinon.stub() }, { thing_name: "bar", event_handler: sinon.stub() }]
+      return app.destroy_thing("foo")
+    })
 
     it("should unregister the subscription", () =>
       expect(thingShadow.unregister).to.have.been.calledOnceWith("foo")
@@ -126,7 +128,9 @@ describe("app", () => {
     it("should delete the thing in AWS", () =>
       expect(awsIot.deleteThing).to.have.been.calledOnceWith({ thingName: "foo" })
     )
-    it("should remove it from the list of subscriptions")
+    it("should remove it from the list of subscriptions", () =>
+      expect(app.subscriptions).to.have.length(1)
+    )
   })
 
 })
