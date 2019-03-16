@@ -38,7 +38,7 @@ class iot {
   }
 
   private event_handler(thing_name: String, state_object: StateObject) {
-    console.log(`RECEIVED ${thing_name}, PAYLOAD: ${JSON.stringify(payload)}`)
+    console.log(`RECEIVED ${thing_name}, PAYLOAD: ${JSON.stringify(state_object)}`)
     _.filter(this.subscriptions, { thing_name: thing_name })
       .forEach(subscriber => subscriber.event_handler(state_object.state))
   }
