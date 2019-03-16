@@ -4,6 +4,8 @@
 [![npm downloads](https://img.shields.io/npm/dt/@chrisns/iot-shorthand.svg)](https://img.shields.io/npm/dt/@chrisns/iot-shorthand.svg "View this project on npm")
 [![npm licence](https://img.shields.io/npm/l/@chrisns/iot-shorthand.svg)](https://img.shields.io/npm/l/@chrisns/iot-shorthand.svg "View this project on npm")
 [![Coverage Status](https://coveralls.io/repos/github/chrisns/iot-shorthand/badge.svg?branch=master)](https://coveralls.io/github/chrisns/iot-shorthand?branch=master)
+[![npm version](https://badge.fury.io/js/%40chrisns%2Fiot-shorthand.svg)](https://www.npmjs.com/package/@chrisns/iot-shorthand)
+
 
 This is really just a self serving repo for me, I'm not sure who else will use it.
 I've written a load of other things that all talk to AWS-IoT which has been a lot of copy paste and deviation between them.
