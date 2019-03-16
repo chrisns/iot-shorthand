@@ -29,7 +29,7 @@ class iot {
       host: AWS_IOT_ENDPOINT_HOST,
       protocol: 'wss'
     })
-    // thingShadows.on('delta', this.event_handler)
+    this.thingShadows.on('delta', this.event_handler.bind(this))
   }
 
   public async discovered(thing: Thing, event_handler?: Function) {
@@ -41,6 +41,8 @@ class iot {
     console.log(`RECEIVED ${thing_name}, PAYLOAD: ${JSON.stringify(state_object)}`)
     _.filter(this.subscriptions, { thing_name: thing_name })
       .forEach(subscriber => subscriber.event_handler(state_object.state))
+
+    this.thingShadows.update(thing_name, { state: { desired: null } })
   }
 
   async upsert_thing(thing: Thing) {

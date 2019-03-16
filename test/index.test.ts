@@ -14,7 +14,8 @@ describe("app", () => {
     thingShadow = {
       register: sinon.stub(),
       unregister: sinon.stub(),
-      update: sinon.stub()
+      update: sinon.stub(),
+      on: sinon.stub()
     }
     awsIot = {
       updateThing: sinon.stub().returns({ promise: sinon.stub() }),
@@ -31,10 +32,14 @@ describe("app", () => {
     app = new myapp()
 
   })
-
-  it("adds thingShadows to the class on construction", () =>
-    expect(stubs["aws-iot-device-sdk"].thingShadow).to.have.been.calledOnce
-  )
+  describe("constructor", () => {
+    it("should subscribe to thing shadow deltas", () =>
+      expect(stubs["aws-iot-device-sdk"].thingShadow).to.have.been.calledOnce
+    )
+    it("adds thingShadows to the class on construction", () =>
+      expect(thingShadow.on).to.have.been.calledOnce
+    )
+  })
 
   describe("discovered", () => {
     var thing = { name: "foo", type: "bar", attributes: { foo: "bar" } }
