@@ -33,12 +33,13 @@ class iot {
   }
 
   public async discovered(thing: Thing, event_handler?: Function) {
+    console.log(`DISCOVERED: ${JSON.stringify(thing)}`)
     await this.upsert_thing(thing)
     await this.subscribe_to_thing(thing.name, event_handler)
   }
 
   private event_handler(thing_name: String, state_object: StateObject) {
-    console.log(`RECEIVED ${thing_name}, PAYLOAD: ${JSON.stringify(state_object)}`)
+    console.log(`RECEIVED: ${thing_name}, PAYLOAD: ${JSON.stringify(state_object)}`)
     _.filter(this.subscriptions, { thing_name: thing_name })
       .forEach(subscriber => subscriber.event_handler(state_object.state))
 
@@ -69,7 +70,7 @@ class iot {
   }
 
   public report(thing_name: string, payload: Object) {
-    console.log(`UPDATE ${thing_name}, PAYLOAD: ${JSON.stringify(payload)}`)
+    console.log(`UPDATE: ${thing_name}, PAYLOAD: ${JSON.stringify(payload)}`)
     return this.thingShadows.update(thing_name, { state: { reported: payload } })
   }
 
