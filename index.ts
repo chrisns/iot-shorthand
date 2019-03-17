@@ -3,7 +3,10 @@ const AWS = require("aws-sdk")
 const { AWS_IOT_ENDPOINT_HOST } = process.env
 const AWSiot = new AWS.Iot()
 const awsIot = require('aws-iot-device-sdk')
-const _ = require("lodash")
+const _ = {
+  filter: require("lodash.filter"),
+  remove: require("lodash.remove")
+}
 
 interface Thing {
   name: string

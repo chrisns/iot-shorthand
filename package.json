@@ -47,7 +47,8 @@
   "dependencies": {
     "aws-iot-device-sdk": "^2.2.1",
     "aws-sdk": "^2.422.0",
-    "lodash": "^4.17.11"
+    "lodash.filter": "^4.6.0",
+    "lodash.remove": "^4.7.0"
   },
   "description": ""
 }
